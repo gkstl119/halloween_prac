@@ -48,12 +48,12 @@ class _SpookyHomePageState extends State<SpookyHomePage>
   Future<void> _playBackgroundMusic() async {
     await _backgroundPlayer.setLoopMode(LoopMode.all);
     await _backgroundPlayer
-        .setAsset('assets/background music/halloween_bg.mp3');
+        .setAsset('assets/background music/halloween-background.mp3');
     _backgroundPlayer.play();
   }
 
   Future<void> _playTrapSound() async {
-    await _trapSoundPlayer.setAsset('assets/trap sound/jump_scare.mp3');
+    await _trapSoundPlayer.setAsset('assets/trap sound/halloween-trap.mp3');
     _trapSoundPlayer.play();
   }
 
@@ -87,10 +87,12 @@ class _SpookyHomePageState extends State<SpookyHomePage>
         children: [
           _buildCharacter(
               grimReaperPosition, 'grim-reaper.jpg', imgSize, _playTrapSound),
-          _buildCharacter(batPosition, 'halloween-bat.png', imgSize),
+          _buildCharacter(
+              batPosition, 'halloween-bat.png', imgSize, _playTrapSound),
           _buildCharacter(
               ghostPosition, 'halloween-ghost.png', imgSize, _playTrapSound),
-          _buildCharacter(pumpkinPosition, 'halloween-pumpkin.jpg', imgSize),
+          _buildCharacter(pumpkinPosition, 'halloween-pumpkin.jpg', imgSize,
+              _playTrapSound),
         ],
       ),
     );
