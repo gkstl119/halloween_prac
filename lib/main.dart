@@ -91,6 +91,10 @@ class _SpookyHomePageState extends State<SpookyHomePage>
           _buildCharacter(
               ghostPosition, 'halloween-ghost.png', imgSize, _playTrapSound),
           _buildCharacter(pumpkinPosition, 'halloween-pumpkin.jpg', imgSize),
+          ElevatedButton(
+            onPressed: () => _playTrapSound(),
+            child: Text('Click Me'),
+          ),
         ],
       ),
     );
