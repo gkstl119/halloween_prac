@@ -63,6 +63,7 @@ flutter:
   - assets/images/
   - assets/background music/
   - assets/trap sound/
+  - assets/winning sound/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -29,11 +29,16 @@ class _SpookyHomePageState extends State<SpookyHomePage>
     with TickerProviderStateMixin {
   final AudioPlayer _backgroundPlayer = AudioPlayer();
   final AudioPlayer _trapSoundPlayer = AudioPlayer();
+  final AudioPlayer _winningSoundPlayer = AudioPlayer();
   late AnimationController _controller;
   final Random _random = Random();
 
   // Character positions
-  late Offset grimReaperPosition, batPosition, ghostPosition, pumpkinPosition;
+  late Offset grimReaperPosition,
+      batPosition,
+      ghostPosition,
+      pumpkinPosition,
+      candyPosition;
 
   @override
   void initState() {
@@ -46,7 +51,7 @@ class _SpookyHomePageState extends State<SpookyHomePage>
   }
 
   Future<void> _playBackgroundMusic() async {
-    await _backgroundPlayer.setLoopMode(LoopMode.all);
+    await _backgroundPlayer.setLoopMode(LoopMode.one);
     await _backgroundPlayer
         .setAsset('assets/background music/halloween-background.mp3');
     _backgroundPlayer.play();
@@ -55,6 +60,12 @@ class _SpookyHomePageState extends State<SpookyHomePage>
   Future<void> _playTrapSound() async {
     await _trapSoundPlayer.setAsset('assets/trap sound/halloween-trap.mp3');
     _trapSoundPlayer.play();
+  }
+
+  Future<void> _playWinningSound() async {
+    await _winningSoundPlayer.setAsset(
+        'assets/winning sound/winning-sound.mp3'); // Correct path for winning sound
+    _winningSoundPlayer.play();
   }
 
   Offset _randomPosition(Size size, double imgSize) => Offset(
@@ -68,6 +79,7 @@ class _SpookyHomePageState extends State<SpookyHomePage>
     batPosition = _randomPosition(size, 300);
     ghostPosition = _randomPosition(size, 400);
     pumpkinPosition = _randomPosition(size, 500);
+    candyPosition = _randomPosition(size, 100); // Candy's position
   }
 
   @override
@@ -75,6 +87,7 @@ class _SpookyHomePageState extends State<SpookyHomePage>
     _controller.dispose();
     _backgroundPlayer.dispose();
     _trapSoundPlayer.dispose();
+    _winningSoundPlayer.dispose();
     super.dispose();
   }
 
@@ -93,6 +106,8 @@ class _SpookyHomePageState extends State<SpookyHomePage>
               ghostPosition, 'halloween-ghost.png', imgSize, _playTrapSound),
           _buildCharacter(pumpkinPosition, 'halloween-pumpkin.jpg', imgSize,
               _playTrapSound),
+          _buildWinningCharacter(candyPosition, 'candy.jpg', imgSize,
+              _playWinningSound), // Candy is the winning element
         ],
       ),
     );
@@ -107,6 +122,38 @@ class _SpookyHomePageState extends State<SpookyHomePage>
       child: GestureDetector(
         onTap: onTap != null ? () => onTap() : null,
         child: Image.asset('assets/images/$image', width: size, height: size),
+      ),
+    );
+  }
+
+  Widget _buildWinningCharacter(
+      Offset position, String image, double size, Function onTap) {
+    return AnimatedPositioned(
+      duration: const Duration(seconds: 10),
+      top: position.dy,
+      left: position.dx,
+      child: GestureDetector(
+        onTap: () {
+          onTap(); // Play the winning sound
+          _showWinningMessage(); // Show the winning message
+        },
+        child: Image.asset('assets/images/$image', width: size, height: size),
+      ),
+    );
+  }
+
+  void _showWinningMessage() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('You Found It!'),
+        content: const Text('Congratulations, you found the hidden candy!'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
